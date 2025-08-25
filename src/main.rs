@@ -1,11 +1,10 @@
 mod plane;
-mod profile;
+mod store;
 mod terminal;
 mod text;
 
 fn main() {
-    println!("config dir : {:?}", profile::files::get_config_dir());
-    profile::files::write_char('a', 19, profile::files::get_config_dir().unwrap());
-    profile::files::write_char('b', 40, profile::files::get_config_dir().unwrap());
-    profile::files::write_char('c', 30, profile::files::get_config_dir().unwrap());
+    let config_path = store::files::get_config_dir().unwrap();
+    println!("config dir : {:?}", config_path);
+    let _ = store::files::write_char(&vec![('a', 123), ('b', 111), ('c', 89)], config_path);
 }
