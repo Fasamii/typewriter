@@ -8,12 +8,15 @@ mod text;
 fn main() {
     let config_path = store::files::get_config_dir().unwrap();
     println!("config dir : {:?}", &config_path);
-    let _ = store::files::write_chars(vec![('a', 123), ('b', 111), ('c', 89)], &config_path);
-    let mut kp: HashMap<char, i8> = std::collections::HashMap::new();
-    kp.insert('a', 12);
-    kp.insert('b', 12);
-    kp.insert('c', 14);
-    kp.insert('g', 14);
+    let _ = store::files::write_chars(
+        vec![('a', (123, 12)), ('b', (1, 2)), ('c', (1, 2))],
+        &config_path,
+    );
+    let mut kp: HashMap<char, (i8, i8)> = std::collections::HashMap::new();
+    kp.insert('a', (1, 2));
+    kp.insert('b', (2, 3));
+    kp.insert('c', (3, 4));
+    kp.insert('g', (4, 5));
 
     let _ = store::files::write_chars(kp, &config_path);
 
