@@ -1,4 +1,4 @@
-use std::{collections, env, fs, io, path};
+use std::{env, fs, io, path};
 
 pub fn get_config_dir() -> io::Result<path::PathBuf> {
     let appname = "typewriter";

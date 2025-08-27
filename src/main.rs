@@ -3,8 +3,6 @@
 // - store how long does it take for user to fly from one key to another - for improvement
 // - store bigram (2) and trigram (3) of keys fly time / accuracy - to customize train text and improvement
 
-use std::collections::{self, HashMap};
-
 mod plane;
 mod store;
 mod terminal;
@@ -33,6 +31,10 @@ fn main() {
         .insert(('b', 'c'), store::profile::BigramStats::new());
 
     println!("profile : {profile:?}");
+    println!(
+        "accuracy of 'a' : {}",
+        profile.keys.get(&'a').unwrap().accuracy()
+    );
 
     profile.save(&config_path).unwrap();
 }

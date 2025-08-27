@@ -10,11 +10,11 @@ pub struct Profile {
     pub accuracy: usize,
 
     pub keys: HashMap<char, CharStats>,
-    #[serde(with = "super::bigram_serializer")]
+    #[serde(with = "bigram_serializer")]
     pub bigrams: HashMap<(char, char), BigramStats>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct CharStats {
     pub count: usize,
     pub correct: usize,
@@ -22,12 +22,42 @@ pub struct CharStats {
     pub min_dwell: usize,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub struct BigramStats {
     pub count: usize,
     pub correct: usize,
     pub avg_flight: usize,
     pub min_flight: usize,
+}
+
+mod bigram_serializer {
+
+    use serde::{Deserialize, ser::SerializeSeq};
+    use std::collections::HashMap;
+
+    pub fn serialize<S>(
+        map: &HashMap<(char, char), super::BigramStats>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let mut seq = serializer.serialize_seq(Some(map.len()))?;
+        for (key, value) in map {
+            seq.serialize_element(&(key, value))?;
+        }
+        seq.end()
+    }
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<HashMap<(char, char), super::BigramStats>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let vec: Vec<((char, char), super::BigramStats)> = Vec::deserialize(deserializer)?;
+        Ok(vec.into_iter().collect())
+    }
 }
 
 impl Profile {
